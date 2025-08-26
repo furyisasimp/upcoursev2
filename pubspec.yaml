@@ -1,0 +1,52 @@
+name: career_roadmap
+description: "Career Roadmap."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^0.8.4
+  http: ^0.13.6  # For API calls
+  crypto: ^3.0.3 # For password hashing
+  percent_indicator: ^4.2.2
+  fl_chart: ^0.66.0
+  video_player: ^2.7.0
+  webview_flutter: ^4.2.1
+  path_provider: ^2.0.11
+  flutter_pdfview: ^1.2.3
+  supabase_flutter: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+
+  fonts:
+    - family: TT Rounds Neue Medium
+      fonts:
+        - asset: assets/fonts/TTRoundsNeueTrialMedium.ttf
+    - family: TT Rounds Neue Bold
+      fonts:
+        - asset: assets/fonts/TTRoundsNeueTrialBold.ttf
+    - family: TT Rounds Neue
+      fonts:
+        - asset: assets/fonts/TTRoundsNeueTrialRegular.ttf
+    - family: Basique
+      fonts:
+        - asset: assets/fonts/Basique.ttf
+    - family: Basique 1
+      fonts:
+        - asset: assets/fonts/Basique1.ttf
