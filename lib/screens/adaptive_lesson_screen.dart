@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:career_roadmap/services/supabase_service.dart';
+import 'package:career_roadmap/screens/skills_screen.dart';
 
 class AdaptiveLessonScreen extends StatefulWidget {
   final String moduleId;
@@ -28,6 +29,12 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
 
   Future<void> _loadLessons() async {
     final data = await SupabaseService.loadSkillModule(widget.moduleId);
+
+    if (data.isEmpty) {
+      setState(() => isLoading = false);
+      return;
+    }
+
     setState(() {
       lessons = data;
       isLoading = false;
@@ -42,7 +49,9 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
 
     if (module.isNotEmpty) {
       setState(() {
+        // lessons_completed reflects "last seen index"
         currentIndex = (module['lessons_completed'] as int?) ?? 0;
+        if (currentIndex >= lessons.length) currentIndex = 0; // ✅ prevent crash
       });
     }
   }
@@ -50,7 +59,7 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
   Future<void> _updateProgress() async {
     await SupabaseService.updateSkillProgress(
       widget.moduleId,
-      currentIndex + 1,
+      currentIndex,
       lessons.length,
     );
   }
@@ -59,12 +68,26 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
     if (currentIndex < lessons.length - 1) {
       setState(() => currentIndex++);
       await _updateProgress();
+    } else {
+      // ✅ On Finish
+      await SupabaseService.updateSkillProgress(
+        widget.moduleId,
+        lessons.length,
+        lessons.length,
+      );
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const SkillsScreen()),
+      );
     }
   }
 
-  void _prevLesson() {
+  void _prevLesson() async {
     if (currentIndex > 0) {
       setState(() => currentIndex--);
+      await _updateProgress();
     }
   }
 
@@ -72,6 +95,12 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (lessons.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text("No lessons found for this module.")),
+      );
     }
 
     final lesson = lessons[currentIndex];
@@ -112,7 +141,7 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      lesson['content'] ?? '',
+                      lesson['content_summary'] ?? '',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ],

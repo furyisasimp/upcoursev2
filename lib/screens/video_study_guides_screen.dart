@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:career_roadmap/widgets/custom_taskbar.dart' as taskbar;
-import 'package:career_roadmap/services/aws_service.dart';
+import 'package:career_roadmap/services/supabase_service.dart'; // ✅ use Supabase now
 import 'package:career_roadmap/routes/route_tracker.dart';
 
 class VideoStudyGuidesScreen extends StatefulWidget {
@@ -26,13 +26,15 @@ class _VideoStudyGuidesScreenState extends State<VideoStudyGuidesScreen> {
   }
 
   Future<void> _loadVideo() async {
-    final url = await AwsService.fetchVideoUrlFromApi('plate_tectonics.mp4');
+    // ✅ Fetch public URL from Supabase
+    final url = await SupabaseService.getVideoUrl('plate_tectonics.mp4');
     if (url != null) {
       try {
         _controller =
             VideoPlayerController.networkUrl(Uri.parse(url))
               ..addListener(() => setState(() {}))
               ..setLooping(false);
+
         await _controller!.initialize();
         setState(() => _isLoading = false);
       } catch (_) {
@@ -57,27 +59,22 @@ class _VideoStudyGuidesScreenState extends State<VideoStudyGuidesScreen> {
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
-    // handle other tab navigation if needed
   }
 
   Future<bool> _handleSystemBack() async {
     final nav = Navigator.of(context);
 
-    // Normal case: if there is a previous route on the stack, just pop.
     if (nav.canPop()) {
       nav.pop();
       return false;
     }
 
-    // If this route was pushed as the first page after login with replacement,
-    // fall back to the last tracked route (if any).
     final last = RouteTracker.instance.lastRouteName;
     if (last != null && last.isNotEmpty) {
       nav.pushReplacementNamed(last);
       return false;
     }
 
-    // Otherwise, consume the back (don’t exit or go to a login screen).
     return false;
   }
 
@@ -87,12 +84,11 @@ class _VideoStudyGuidesScreenState extends State<VideoStudyGuidesScreen> {
       onWillPop: _handleSystemBack,
       child: Scaffold(
         backgroundColor: const Color(0xFFF2FBFF),
-        // Plain AppBar (no logo, no settings). Back button appears automatically if canPop == true.
         appBar: AppBar(
           backgroundColor: const Color(0xFFF2FBFF),
           elevation: 0,
-          automaticallyImplyLeading: true, // show system back when applicable
-          title: const SizedBox.shrink(), // no title/logo
+          automaticallyImplyLeading: true,
+          title: const SizedBox.shrink(),
         ),
         body: SafeArea(
           child: ListView(

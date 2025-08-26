@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:career_roadmap/services/supabase_service.dart';
+import 'package:career_roadmap/screens/skills_screen.dart';
 
 class AdaptiveQuizScreen extends StatefulWidget {
   final String quizId;
@@ -31,11 +32,32 @@ class _AdaptiveQuizScreenState extends State<AdaptiveQuizScreen> {
     final data = await SupabaseService.loadQuiz(widget.quizId);
     setState(() => questions = data);
 
-    // Mark quiz as "in_progress" if user starts it
-    await SupabaseService.updateQuizProgress(
-      widget.quizId,
-      status: "in_progress",
+    // ✅ Fetch existing progress
+    final quizProgress = await SupabaseService.getQuizProgress();
+    final thisQuiz = quizProgress.firstWhere(
+      (q) => q['quiz_id'] == widget.quizId,
+      orElse: () => {},
     );
+
+    if (thisQuiz.isNotEmpty && thisQuiz['status'] == 'completed') {
+      setState(() {
+        submitted = true;
+        score = thisQuiz['score'] ?? 0;
+        if (thisQuiz['answers'] != null) {
+          answers.addAll(
+            (thisQuiz['answers'] as Map).map(
+              (key, value) => MapEntry(int.parse(key.toString()), value as int),
+            ),
+          );
+        }
+      });
+    } else {
+      // Mark as in progress if never started
+      await SupabaseService.updateQuizProgress(
+        widget.quizId,
+        status: "in_progress",
+      );
+    }
   }
 
   Future<void> _submit() async {
@@ -49,10 +71,12 @@ class _AdaptiveQuizScreenState extends State<AdaptiveQuizScreen> {
       score = ((correct / questions.length) * 100).round();
     });
 
+    // ✅ Save score + answers
     await SupabaseService.updateQuizProgress(
       widget.quizId,
       status: "completed",
       score: score,
+      answers: answers,
     );
   }
 
@@ -83,7 +107,7 @@ class _AdaptiveQuizScreenState extends State<AdaptiveQuizScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Q${idx + 1}. ${q['question']}",
+                      "Q${idx + 1}. ${q['text']}",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -91,14 +115,71 @@ class _AdaptiveQuizScreenState extends State<AdaptiveQuizScreen> {
                     ),
                     const SizedBox(height: 8),
                     ...q['options'].asMap().entries.map((opt) {
-                      return RadioListTile<int>(
-                        value: opt.key,
-                        groupValue: answers[idx],
-                        title: Text(opt.value),
-                        onChanged:
-                            submitted
-                                ? null
-                                : (val) => setState(() => answers[idx] = val!),
+                      final optIndex = opt.key;
+                      final isSelected = answers[idx] == optIndex;
+                      final isCorrect = q['correct_index'] == optIndex;
+
+                      // ✅ Highlight after submission
+                      Color? tileColor;
+                      if (submitted) {
+                        if (isCorrect) {
+                          tileColor = Colors.green.withOpacity(0.2);
+                        } else if (isSelected && !isCorrect) {
+                          tileColor = Colors.red.withOpacity(0.2);
+                        }
+                      }
+
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          color: tileColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RadioListTile<int>(
+                              value: optIndex,
+                              groupValue: answers[idx],
+                              title: Text(opt.value),
+                              onChanged:
+                                  submitted
+                                      ? null
+                                      : (val) =>
+                                          setState(() => answers[idx] = val!),
+                            ),
+                            if (submitted)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  bottom: 6,
+                                  right: 16,
+                                ),
+                                child: Row(
+                                  children: [
+                                    if (isCorrect)
+                                      const Text(
+                                        "✔ Correct",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    else if (isSelected && !isCorrect)
+                                      const Text(
+                                        "✘ Your Answer",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
                       );
                     }),
                   ],
@@ -131,7 +212,12 @@ class _AdaptiveQuizScreenState extends State<AdaptiveQuizScreen> {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SkillsScreen()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3EB6FF),
                     foregroundColor: Colors.white,

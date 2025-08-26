@@ -14,6 +14,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _passwordVisible = false; // 👈 New state for password visibility
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
@@ -116,13 +117,25 @@ class LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: !_passwordVisible, // 👈 use state
                         decoration: InputDecoration(
                           labelText: 'Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),

@@ -14,14 +14,24 @@ class SignupScreen extends StatefulWidget {
 class SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
   bool _isLoading = false;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   Future<void> _register() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
-      _showMessage('Email and password cannot be empty.');
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showMessage('Email and passwords cannot be empty.');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showMessage('Passwords do not match.');
       return;
     }
 
@@ -39,7 +49,7 @@ class SignupScreenState extends State<SignupScreen> {
       setState(() => _isLoading = false);
 
       if (response.user != null) {
-        final userId = response.user!.id; // UUID from Supabase Auth
+        final userId = response.user!.id;
 
         // Insert default row in users table
         await SupabaseService.upsertMyProfile({
@@ -106,6 +116,7 @@ class SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
+                      // Email
                       TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -118,15 +129,55 @@ class SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
+                      // Password
                       TextField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: !_passwordVisible,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => _passwordVisible = !_passwordVisible,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Confirm Password
+                      TextField(
+                        controller: _confirmPasswordController,
+                        obscureText: !_confirmPasswordVisible,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _confirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () =>
+                                    _confirmPasswordVisible =
+                                        !_confirmPasswordVisible,
+                              );
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -189,6 +240,7 @@ class SignupScreenState extends State<SignupScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 }

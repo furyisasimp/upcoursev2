@@ -1,3 +1,4 @@
+// lib/screens/skills_screen.dart
 import 'package:flutter/material.dart';
 import 'package:career_roadmap/widgets/custom_taskbar.dart';
 import 'home_screen.dart';
@@ -6,6 +7,10 @@ import 'quiz_categories_screen.dart';
 import 'profile_details_screen.dart';
 import 'package:career_roadmap/services/supabase_service.dart';
 import 'package:career_roadmap/routes/route_tracker.dart';
+
+// Import adaptive screens
+import 'adaptive_lesson_screen.dart';
+import 'adaptive_quiz_screen.dart';
 
 class SkillsScreen extends StatefulWidget {
   const SkillsScreen({Key? key}) : super(key: key);
@@ -88,7 +93,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                title,
+                title.replaceAll('_', ' ').toUpperCase(),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -134,7 +139,16 @@ class _SkillsScreenState extends State<SkillsScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Navigate to module detail screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => AdaptiveLessonScreen(
+                              moduleId: title,
+                              title: title.replaceAll('_', ' ').toUpperCase(),
+                            ),
+                      ),
+                    ).then((_) => _loadProgress());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -145,8 +159,17 @@ class _SkillsScreenState extends State<SkillsScreen> {
               ),
               const SizedBox(width: 12),
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Download module materials
+                onPressed: () async {
+                  final url = await SupabaseService.getFileUrl(
+                    bucket: "skill-modules",
+                    path: "$title.json",
+                  );
+                  if (!mounted) return;
+                  if (url != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Download started: $url")),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -208,7 +231,9 @@ class _SkillsScreenState extends State<SkillsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    quiz['quiz_id'] ?? 'Unknown Quiz',
+                    (quiz['quiz_id'] as String)
+                        .replaceAll('_', ' ')
+                        .toUpperCase(),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -221,7 +246,19 @@ class _SkillsScreenState extends State<SkillsScreen> {
             if (!isLocked)
               ElevatedButton(
                 onPressed: () {
-                  // TODO: Start or view quiz
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => AdaptiveQuizScreen(
+                            quizId: quiz['quiz_id'],
+                            title:
+                                (quiz['quiz_id'] as String)
+                                    .replaceAll('_', ' ')
+                                    .toUpperCase(),
+                          ),
+                    ),
+                  ).then((_) => _loadProgress());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,

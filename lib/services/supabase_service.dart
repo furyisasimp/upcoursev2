@@ -28,8 +28,8 @@ class SupabaseService {
         'created_at': DateTime.now().toIso8601String(),
       });
 
-      // ✅ Seed default skill_progress
-      await supa.from('skill_progress').insert([
+      // ✅ Seed default skill_progress (avoid duplicates with onConflict)
+      await supa.from('skill_progress').upsert([
         {
           'user_id': uid,
           'module_id': 'programming_fundamentals',
@@ -48,29 +48,32 @@ class SupabaseService {
           'lessons_completed': 0,
           'lessons_total': 20,
         },
-      ]);
+      ], onConflict: 'user_id,module_id');
 
-      // ✅ Seed default quiz_progress
-      await supa.from('quiz_progress').insert([
+      // ✅ Seed default quiz_progress (avoid duplicates with onConflict)
+      await supa.from('quiz_progress').upsert([
         {
           'user_id': uid,
           'quiz_id': 'basic_programming_quiz',
           'status': 'unlocked',
           'score': null,
+          'answers': null,
         },
         {
           'user_id': uid,
           'quiz_id': 'logic_algorithms',
           'status': 'locked',
           'score': null,
+          'answers': null,
         },
         {
           'user_id': uid,
           'quiz_id': 'advanced_concepts',
           'status': 'locked',
           'score': null,
+          'answers': null,
         },
-      ]);
+      ], onConflict: 'user_id,quiz_id');
     }
     return res;
   }
@@ -223,22 +226,6 @@ class SupabaseService {
         .maybeSingle();
   }
 
-  // ---------- SKILL MODULES ----------
-  static Future<List<Map<String, dynamic>>> loadSkillModule(
-    String moduleId,
-  ) async {
-    final data = await supa.storage
-        .from('skill-modules')
-        .download("$moduleId.json");
-
-    final decoded = json.decode(utf8.decode(data));
-    return (decoded as List).cast<Map<String, dynamic>>();
-  }
-
-  static Future<String> downloadSkillModule(String moduleId) async {
-    return supa.storage.from('skill-modules').getPublicUrl("$moduleId.json");
-  }
-
   // ---------- SKILL PROGRESS ----------
   static Future<void> updateSkillProgress(
     String moduleId,
@@ -254,7 +241,7 @@ class SupabaseService {
       'lessons_completed': lessonsCompleted,
       'lessons_total': lessonsTotal,
       'updated_at': DateTime.now().toIso8601String(),
-    });
+    }, onConflict: 'user_id,module_id'); // ✅ no duplicates
   }
 
   static Future<List<Map<String, dynamic>>> getSkillProgress() async {
@@ -263,21 +250,12 @@ class SupabaseService {
     return await supa.from('skill_progress').select().eq('user_id', uid);
   }
 
-  // ---------- QUIZZES ----------
-  static Future<List<Map<String, dynamic>>> loadQuiz(String quizId) async {
-    final data = await supa.storage
-        .from('adaptive-quizzes')
-        .download("$quizId.json");
-
-    final decoded = json.decode(utf8.decode(data));
-    return (decoded as List).cast<Map<String, dynamic>>();
-  }
-
   // ---------- QUIZ PROGRESS ----------
   static Future<void> updateQuizProgress(
     String quizId, {
     String status = 'in_progress',
     int? score,
+    Map<int, int>? answers,
   }) async {
     final uid = authUserId;
     if (uid == null) throw 'Not logged in';
@@ -287,14 +265,64 @@ class SupabaseService {
       'quiz_id': quizId,
       'status': status,
       'score': score,
+      'answers':
+          answers != null
+              ? answers.map((k, v) => MapEntry(k.toString(), v))
+              : null,
       'updated_at': DateTime.now().toIso8601String(),
-    });
+    }, onConflict: 'user_id,quiz_id'); // ✅ no duplicates
   }
 
   static Future<List<Map<String, dynamic>>> getQuizProgress() async {
     final uid = authUserId;
     if (uid == null) return [];
     return await supa.from('quiz_progress').select().eq('user_id', uid);
+  }
+
+  // ---------- LOAD LESSONS ----------
+  static Future<List<Map<String, dynamic>>> loadSkillModule(
+    String moduleId,
+  ) async {
+    try {
+      final data = await supa.storage
+          .from("skill-modules")
+          .download("$moduleId.json");
+
+      final decoded = json.decode(utf8.decode(data));
+
+      if (decoded is Map<String, dynamic> && decoded.containsKey("lessons")) {
+        return (decoded["lessons"] as List)
+            .map((e) => Map<String, dynamic>.from(e))
+            .toList();
+      }
+
+      return [];
+    } catch (e) {
+      print("Error loading module: $e");
+      return [];
+    }
+  }
+
+  // ---------- LOAD QUIZZES ----------
+  static Future<List<Map<String, dynamic>>> loadQuiz(String quizId) async {
+    try {
+      final data = await supa.storage
+          .from("adaptive-quizzes")
+          .download("$quizId.json");
+
+      final decoded = json.decode(utf8.decode(data));
+
+      if (decoded is Map<String, dynamic> && decoded.containsKey("questions")) {
+        return (decoded["questions"] as List)
+            .map((e) => Map<String, dynamic>.from(e))
+            .toList();
+      }
+
+      return [];
+    } catch (e) {
+      print("Error loading quiz: $e");
+      return [];
+    }
   }
 
   // ---------- STORAGE ----------
@@ -320,8 +348,18 @@ class SupabaseService {
     return supa.storage.from('avatars').getPublicUrl(path);
   }
 
+  // ✅ NEW: Dynamic list of PDFs
+  static Future<List<FileObject>> listPdfFiles() async {
+    return await supa.storage.from('my-study-guides').list();
+  }
+
   static Future<String?> getPdfUrl(String key) async {
     return supa.storage.from('my-study-guides').getPublicUrl(key);
+  }
+
+  // ✅ NEW: Dynamic list of videos
+  static Future<List<FileObject>> listVideoFiles() async {
+    return await supa.storage.from('study-guide-videos').list();
   }
 
   static Future<String?> getVideoUrl(String key) async {

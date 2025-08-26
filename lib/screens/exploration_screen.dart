@@ -321,7 +321,7 @@ class ExplorationScreen extends StatelessWidget {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 child: const Text(
-                  'Start Chat',
+                  'In Development',
                   style: TextStyle(color: Colors.white), // ← here
                 ),
               ),
