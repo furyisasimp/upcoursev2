@@ -24,49 +24,44 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     _fetchUserProfile();
   }
 
-  void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
-  }
+  void _onItemTapped(int index) => setState(() => _selectedIndex = index);
 
   Future<void> _fetchUserProfile() async {
     setState(() => _isLoading = true);
     final profile = await SupabaseService.getMyProfile();
-    setState(() => _isLoading = false);
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      _profileData = profile;
+    });
 
-    if (profile != null) {
-      setState(() => _profileData = profile);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Failed to load profile',
-              style: TextStyle(fontFamily: 'Inter'),
-            ),
+    if (profile == null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Failed to load profile',
+            style: TextStyle(fontFamily: 'Inter'),
           ),
-        );
-      }
+        ),
+      );
     }
   }
 
   Future<void> _pickProfilePicture() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked == null) return;
 
-    if (picked != null) {
-      setState(() => _profileImage = File(picked.path));
-      final bytes = await File(picked.path).readAsBytes();
+    setState(() => _profileImage = File(picked.path));
+    final bytes = await File(picked.path).readAsBytes();
 
-      // upload to Supabase storage
-      final url = await SupabaseService.uploadAvatar(
-        fileName: 'profile_${SupabaseService.authUserId}.jpg',
-        bytes: bytes,
-      );
+    final url = await SupabaseService.uploadAvatar(
+      fileName: 'profile_${SupabaseService.authUserId}.jpg',
+      bytes: bytes,
+    );
 
-      // update user profile with new avatar URL
-      await SupabaseService.upsertMyProfile({'profile_picture': url});
-      _fetchUserProfile();
-    }
+    await SupabaseService.upsertMyProfile({'profile_picture': url});
+    if (mounted) _fetchUserProfile();
   }
 
   @override
@@ -79,42 +74,76 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         onItemTapped: _onItemTapped,
       ),
       body: SafeArea(
-        child:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child:
-                      _profileData == null
-                          ? const Text(
-                            'No profile data found.',
-                            style: TextStyle(fontFamily: 'Inter'),
-                          )
-                          : _buildProfileView(),
-                ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child:
+                    _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child:
+                              _profileData == null
+                                  ? const Text(
+                                    'No profile data found.',
+                                    style: TextStyle(fontFamily: 'Inter'),
+                                  )
+                                  : _buildProfileView(constraints.maxWidth),
+                        ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildProfileView() {
+  Widget _buildProfileView(double width) {
     final firstName = _profileData?['first_name'] ?? '';
     final middleName = _profileData?['middle_name'] ?? '';
     final lastName = _profileData?['last_name'] ?? '';
     final gradeLevel = _profileData?['grade_level'] ?? 'N/A';
-
-    // Include middle name in full name
     final fullName = [
       firstName,
       if (middleName.isNotEmpty) middleName,
       lastName,
     ].join(' ');
-
     final profilePicUrl = _profileData?['profile_picture'];
+
+    final bool isNarrow = width < 360; // tiny phones breakpoint
+    final double avatarRadius = isNarrow ? 28 : 35;
+
+    final nameBlock = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          fullName.isEmpty ? 'Student' : fullName,
+          maxLines: isNarrow ? 2 : 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: true,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          'Grade $gradeLevel Student',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontFamily: 'Inter', color: Colors.white),
+        ),
+      ],
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header with avatar + name
+        // Adaptive header (Row on normal screens, Column on very narrow)
         Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -125,44 +154,53 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: _pickProfilePicture,
-                child: CircleAvatar(
-                  radius: 35,
-                  backgroundImage:
-                      _profileImage != null
-                          ? FileImage(_profileImage!) as ImageProvider
-                          : (profilePicUrl != null && profilePicUrl.isNotEmpty)
-                          ? NetworkImage(profilePicUrl)
-                          : const AssetImage('assets/user_placeholder.png'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    fullName,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+          child:
+              isNarrow
+                  ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: _pickProfilePicture,
+                        child: CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundImage:
+                              _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : (profilePicUrl != null &&
+                                      profilePicUrl.isNotEmpty)
+                                  ? NetworkImage(profilePicUrl)
+                                  : const AssetImage(
+                                        'assets/user_placeholder.png',
+                                      )
+                                      as ImageProvider,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Align(alignment: Alignment.center, child: nameBlock),
+                    ],
+                  )
+                  : Row(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickProfilePicture,
+                        child: CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundImage:
+                              _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : (profilePicUrl != null &&
+                                      profilePicUrl.isNotEmpty)
+                                  ? NetworkImage(profilePicUrl)
+                                  : const AssetImage(
+                                        'assets/user_placeholder.png',
+                                      )
+                                      as ImageProvider,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(child: nameBlock),
+                    ],
                   ),
-                  Text(
-                    'Grade $gradeLevel Student',
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
         const SizedBox(height: 20),
 
@@ -179,6 +217,7 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
             _infoRow('Email', SupabaseService.authEmail ?? 'N/A'),
           ],
         ),
+        const SizedBox(height: 32),
       ],
     );
   }
@@ -187,19 +226,26 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          Flexible(
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 6,
             child: Text(
               value,
               textAlign: TextAlign.right,
+              softWrap: true,
+              overflow: TextOverflow.visible,
               style: const TextStyle(fontFamily: 'Inter'),
             ),
           ),
@@ -228,7 +274,7 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               const Icon(Icons.star, size: 20, color: Colors.amber),
               const SizedBox(width: 8),
               Text(
-                title,
+                title, // ← dynamic again
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
