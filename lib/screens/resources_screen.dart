@@ -56,8 +56,9 @@ class ResourcesScreenState extends State<ResourcesScreen> {
         title: const Text(
           'Resources',
           style: TextStyle(
+            fontFamily: 'Poppins',
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: Colors.black87,
           ),
         ),
@@ -70,7 +71,7 @@ class ResourcesScreenState extends State<ResourcesScreen> {
               icon: Icons.assignment,
               title: 'Pre-Assessment',
               subtitle: 'Test your NCAE readiness',
-              colors: [Color(0xFF81D4FA), Color(0xFF29B6F6)],
+              colors: const [Color(0xFF81D4FA), Color(0xFF29B6F6)],
               onTap: () {
                 Navigator.of(
                   context,
@@ -82,7 +83,7 @@ class ResourcesScreenState extends State<ResourcesScreen> {
               icon: Icons.book,
               title: 'Study Guides',
               subtitle: 'Browse recommended materials',
-              colors: [Color(0xFFCE93D8), Color(0xFFAB47BC)],
+              colors: const [Color(0xFFCE93D8), Color(0xFFAB47BC)],
               onTap: () {
                 Navigator.of(
                   context,
@@ -94,7 +95,7 @@ class ResourcesScreenState extends State<ResourcesScreen> {
               icon: Icons.video_library,
               title: 'Video Tutorials',
               subtitle: 'Watch explanatory videos',
-              colors: [Color(0xFFFFF59D), Color(0xFFFFEE58)],
+              colors: const [Color(0xFFFFF59D), Color(0xFFFFEE58)],
               onTap: () {
                 Navigator.of(
                   context,
@@ -106,7 +107,7 @@ class ResourcesScreenState extends State<ResourcesScreen> {
               icon: Icons.explore,
               title: 'Exploration',
               subtitle: 'Discover SHS pathways',
-              colors: [Color(0xFFA5D6A7), Color(0xFF66BB6A)],
+              colors: const [Color(0xFFA5D6A7), Color(0xFF66BB6A)],
               onTap: () {
                 Navigator.of(
                   context,
@@ -118,7 +119,7 @@ class ResourcesScreenState extends State<ResourcesScreen> {
               icon: Icons.star,
               title: 'Skills',
               subtitle: 'Build & track skills',
-              colors: [Color(0xFFFFAB91), Color(0xFFFF7043)],
+              colors: const [Color(0xFFFFAB91), Color(0xFFFF7043)],
               onTap: () {
                 Navigator.of(
                   context,
@@ -223,15 +224,20 @@ class _ResourceCardState extends State<_ResourceCard> {
                 Text(
                   widget.title,
                   style: const TextStyle(
+                    fontFamily: 'Poppins',
                     color: Colors.white,
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.subtitle,
-                  style: const TextStyle(fontSize: 14, color: Colors.white70),
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
                 ),
               ],
             ),

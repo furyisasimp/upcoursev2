@@ -135,7 +135,12 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile saved successfully!')),
+        const SnackBar(
+          content: Text(
+            'Profile saved successfully!',
+            style: TextStyle(fontFamily: 'Inter'),
+          ),
+        ),
       );
 
       Navigator.pushReplacement(
@@ -144,9 +149,14 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to save profile: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to save profile: $e',
+            style: const TextStyle(fontFamily: 'Inter'),
+          ),
+        ),
+      );
     } finally {
       setState(() => _isSaving = false);
     }
@@ -160,9 +170,9 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
           'Profile Builder',
           style: TextStyle(
             color: Colors.white,
-            fontFamily: 'TT Rounds Neue',
+            fontFamily: 'Poppins',
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
         backgroundColor: const Color(0xFF007BFF),
@@ -236,7 +246,13 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
                       Center(
                         child: ElevatedButton(
                           onPressed: _submitProfile,
-                          child: const Text('Save Profile'),
+                          child: const Text(
+                            'Save Profile',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -258,12 +274,10 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
         controller: controller,
         keyboardType: keyboardType,
         enabled: enabled,
+        style: const TextStyle(fontFamily: 'Inter'),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(
-            fontFamily: 'TT Rounds Neue',
-            fontSize: 16,
-          ),
+          labelStyle: const TextStyle(fontFamily: 'Inter', fontSize: 16),
           filled: true,
           fillColor: enabled ? Colors.white : Colors.grey[200],
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -279,12 +293,10 @@ class ProfileBuilderScreenState extends State<ProfileBuilderScreen> {
         onTap: () => _selectDate(context),
         child: AbsorbPointer(
           child: TextField(
+            style: const TextStyle(fontFamily: 'Inter'),
             decoration: InputDecoration(
               labelText: 'Birthdate',
-              labelStyle: const TextStyle(
-                fontFamily: 'TT Rounds Neue',
-                fontSize: 16,
-              ),
+              labelStyle: const TextStyle(fontFamily: 'Inter', fontSize: 16),
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(

@@ -261,6 +261,7 @@ class ResultsScreen extends StatelessWidget {
                     (v, _) => Text(
                       '${v.toInt()}%',
                       style: const TextStyle(
+                        fontFamily: 'RobotoMono',
                         fontSize: 10,
                         color: Colors.black54,
                       ),
@@ -281,6 +282,7 @@ class ResultsScreen extends StatelessWidget {
                       child: Text(
                         label,
                         style: const TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                         ),
@@ -311,7 +313,11 @@ class ResultsScreen extends StatelessWidget {
       children: [
         const Text(
           'Top 3 Preferences',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 12),
         Column(
@@ -331,10 +337,14 @@ class ResultsScreen extends StatelessWidget {
                     ),
                     title: Text(
                       "${res['rank']}. ${categoryNames[categoryKey] ?? categoryKey}",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     subtitle: Text(
                       "Score: ${res['score']} | ${res['percentage']}% | Level: ${res['level']}",
+                      style: const TextStyle(fontFamily: 'Inter'),
                     ),
                   ),
                 );
@@ -349,20 +359,72 @@ class ResultsScreen extends StatelessWidget {
     return DataTable(
       headingRowColor: MaterialStateProperty.all(Colors.blue.shade50),
       columns: const [
-        DataColumn(label: Text("Category")),
-        DataColumn(label: Text("Score")),
-        DataColumn(label: Text("%")),
-        DataColumn(label: Text("Rank")),
+        DataColumn(
+          label: Text(
+            "Category",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            "Score",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            "%",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            "Rank",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ],
       rows:
           results.map((res) {
             final categoryKey = res['category'].toString();
             return DataRow(
               cells: [
-                DataCell(Text(categoryNames[categoryKey] ?? categoryKey)),
-                DataCell(Text(res['score'].toString())),
-                DataCell(Text("${res['percentage']}%")),
-                DataCell(Text(res['rank'].toString())),
+                DataCell(
+                  Text(
+                    categoryNames[categoryKey] ?? categoryKey,
+                    style: const TextStyle(fontFamily: 'Inter'),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    res['score'].toString(),
+                    style: const TextStyle(fontFamily: 'Inter'),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    "${res['percentage']}%",
+                    style: const TextStyle(fontFamily: 'Inter'),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    res['rank'].toString(),
+                    style: const TextStyle(fontFamily: 'Inter'),
+                  ),
+                ),
               ],
             );
           }).toList(),
@@ -378,7 +440,11 @@ class ResultsScreen extends StatelessWidget {
         elevation: 0,
         title: const Text(
           'Your Assessment Results',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         centerTitle: true,
       ),
@@ -391,14 +457,22 @@ class ResultsScreen extends StatelessWidget {
             const SizedBox(height: 24),
             const Text(
               'Top Strengths (Chart View)',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 12),
             _buildBarChart(),
             const SizedBox(height: 24),
             const Text(
               'Summary Table (All Categories)',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 12),
             Expanded(child: SingleChildScrollView(child: _buildSummaryTable())),

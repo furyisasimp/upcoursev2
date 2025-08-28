@@ -67,9 +67,11 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: const TextStyle(fontFamily: 'Inter')),
+      ),
+    );
   }
 
   @override
@@ -97,9 +99,9 @@ class LoginScreenState extends State<LoginScreen> {
                       const Text(
                         'Login',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'TT Rounds Neue Bold',
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -108,6 +110,7 @@ class LoginScreenState extends State<LoginScreen> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Email',
+                          labelStyle: const TextStyle(fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -120,6 +123,7 @@ class LoginScreenState extends State<LoginScreen> {
                         obscureText: !_passwordVisible, // 👈 use state
                         decoration: InputDecoration(
                           labelText: 'Password',
+                          labelStyle: const TextStyle(fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -158,6 +162,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   : const Text(
                                     'Login',
                                     style: TextStyle(
+                                      fontFamily: 'Inter',
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -178,6 +183,7 @@ class LoginScreenState extends State<LoginScreen> {
                         child: const Text(
                           "Don't have an account? Sign up",
                           style: TextStyle(
+                            fontFamily: 'Inter',
                             color: Color(0xFF3EB6FF),
                             fontWeight: FontWeight.w500,
                           ),

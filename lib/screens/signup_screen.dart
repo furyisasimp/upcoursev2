@@ -80,9 +80,11 @@ class SignupScreenState extends State<SignupScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: const TextStyle(fontFamily: 'Inter')),
+      ),
+    );
   }
 
   @override
@@ -110,9 +112,9 @@ class SignupScreenState extends State<SignupScreen> {
                       const Text(
                         'Create Account',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'TT Rounds Neue Medium',
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -122,6 +124,7 @@ class SignupScreenState extends State<SignupScreen> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Email',
+                          labelStyle: const TextStyle(fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -135,6 +138,7 @@ class SignupScreenState extends State<SignupScreen> {
                         obscureText: !_passwordVisible,
                         decoration: InputDecoration(
                           labelText: 'Password',
+                          labelStyle: const TextStyle(fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -160,6 +164,7 @@ class SignupScreenState extends State<SignupScreen> {
                         obscureText: !_confirmPasswordVisible,
                         decoration: InputDecoration(
                           labelText: 'Confirm Password',
+                          labelStyle: const TextStyle(fontFamily: 'Inter'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -200,6 +205,7 @@ class SignupScreenState extends State<SignupScreen> {
                                   : const Text(
                                     'Sign Up',
                                     style: TextStyle(
+                                      fontFamily: 'Inter',
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -220,6 +226,7 @@ class SignupScreenState extends State<SignupScreen> {
                         child: const Text(
                           "Already have an account? Log in",
                           style: TextStyle(
+                            fontFamily: 'Inter',
                             color: Color(0xFF3EB6FF),
                             fontWeight: FontWeight.w500,
                           ),

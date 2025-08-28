@@ -99,16 +99,20 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                     "Get Ready for the Quiz!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'TT Rounds Neue Bold',
                     ),
                   ),
                   const SizedBox(height: 12),
                   const Text(
                     "Answer a few questions and see what you discover about your interests and strengths!",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15.5, color: Colors.black87),
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 15.5,
+                      color: Colors.black87,
+                    ),
                   ),
                   const Spacer(),
                   SizedBox(
@@ -125,8 +129,9 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                       child: const Text(
                         "Start Quiz",
                         style: TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),

@@ -99,7 +99,12 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
 
     if (lessons.isEmpty) {
       return const Scaffold(
-        body: Center(child: Text("No lessons found for this module.")),
+        body: Center(
+          child: Text(
+            "No lessons found for this module.",
+            style: TextStyle(fontFamily: 'Inter'),
+          ),
+        ),
       );
     }
 
@@ -107,7 +112,13 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: const Color(0xFF3EB6FF),
         foregroundColor: Colors.white,
       ),
@@ -122,9 +133,14 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
               color: Colors.black,
             ),
             const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               "Lesson ${currentIndex + 1} of ${lessons.length}",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 12),
             Expanded(
@@ -135,14 +151,19 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
                     Text(
                       lesson['title'] ?? '',
                       style: const TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       lesson['content_summary'] ?? '',
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ],
                 ),
@@ -159,7 +180,13 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
                       ),
-                      child: const Text("Previous"),
+                      child: const Text(
+                        "Previous",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 if (currentIndex > 0) const SizedBox(width: 12),
@@ -174,6 +201,10 @@ class _AdaptiveLessonScreenState extends State<AdaptiveLessonScreen> {
                       currentIndex == lessons.length - 1
                           ? "Finish"
                           : "Next Lesson",
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

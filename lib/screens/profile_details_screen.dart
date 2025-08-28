@@ -37,9 +37,14 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       setState(() => _profileData = profile);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Failed to load profile')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Failed to load profile',
+              style: TextStyle(fontFamily: 'Inter'),
+            ),
+          ),
+        );
       }
     }
   }
@@ -81,7 +86,10 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   padding: const EdgeInsets.all(16),
                   child:
                       _profileData == null
-                          ? const Text('No profile data found.')
+                          ? const Text(
+                            'No profile data found.',
+                            style: TextStyle(fontFamily: 'Inter'),
+                          )
                           : _buildProfileView(),
                 ),
       ),
@@ -138,14 +146,18 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   Text(
                     fullName,
                     style: const TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
                   ),
                   Text(
                     'Grade $gradeLevel Student',
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -177,8 +189,20 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Flexible(child: Text(value, textAlign: TextAlign.right)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(fontFamily: 'Inter'),
+            ),
+          ),
         ],
       ),
     );
@@ -206,6 +230,7 @@ class ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               Text(
                 title,
                 style: const TextStyle(
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),

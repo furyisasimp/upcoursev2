@@ -146,8 +146,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                       const Text(
                         "Pre-Assessment Questionnaire for NCAE",
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 24,
-                          fontFamily: 'TT Rounds Neue Bold',
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -183,8 +183,9 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                                   child: const Text(
                                     "Submit",
                                     style: TextStyle(
+                                      fontFamily: 'Inter',
                                       fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -209,14 +210,21 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
           children: [
             Text(
               "Q${idx + 1}. ${q.text}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             ...q.options.asMap().entries.map((entry) {
               final optIndex = entry.key;
               final opt = entry.value;
               return RadioListTile<String>(
-                title: Text(opt),
+                title: Text(
+                  opt,
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 15),
+                ),
                 value: optIndex.toString(),
                 groupValue: _answers[idx],
                 onChanged: (val) {

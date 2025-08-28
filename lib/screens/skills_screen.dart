@@ -95,6 +95,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
               Text(
                 title.replaceAll('_', ' ').toUpperCase(),
                 style: const TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -111,6 +112,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
                 child: Text(
                   level,
                   style: TextStyle(
+                    fontFamily: 'Inter',
                     fontSize: 12,
                     color: isPrimary ? Colors.white : Colors.black87,
                   ),
@@ -121,7 +123,10 @@ class _SkillsScreenState extends State<SkillsScreen> {
           const SizedBox(height: 8),
 
           // Lessons
-          Text('$lessonsCompleted / $lessonsTotal lessons completed'),
+          Text(
+            '$lessonsCompleted / $lessonsTotal lessons completed',
+            style: const TextStyle(fontFamily: 'Inter'),
+          ),
           const SizedBox(height: 4),
 
           // Progress Bar
@@ -154,7 +159,13 @@ class _SkillsScreenState extends State<SkillsScreen> {
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text("Continue Learning"),
+                  child: const Text(
+                    "Continue Learning",
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -167,7 +178,12 @@ class _SkillsScreenState extends State<SkillsScreen> {
                   if (!mounted) return;
                   if (url != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Download started: $url")),
+                      SnackBar(
+                        content: Text(
+                          "Download started: $url",
+                          style: const TextStyle(fontFamily: 'Inter'),
+                        ),
+                      ),
                     );
                   }
                 },
@@ -176,7 +192,13 @@ class _SkillsScreenState extends State<SkillsScreen> {
                   foregroundColor: Colors.black,
                   side: const BorderSide(color: Colors.black12),
                 ),
-                child: const Text("Download"),
+                child: const Text(
+                  "Download",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
@@ -235,11 +257,18 @@ class _SkillsScreenState extends State<SkillsScreen> {
                         .replaceAll('_', ' ')
                         .toUpperCase(),
                     style: const TextStyle(
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
                   ),
-                  Text(subtitle, style: const TextStyle(color: Colors.black54)),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.black54,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -264,7 +293,13 @@ class _SkillsScreenState extends State<SkillsScreen> {
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                 ),
-                child: Text(isCompleted ? "View" : "Start"),
+                child: Text(
+                  isCompleted ? "View" : "Start",
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
           ],
         ),
@@ -279,7 +314,13 @@ class _SkillsScreenState extends State<SkillsScreen> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FBFF),
         appBar: AppBar(
-          title: const Text('Skill Development'),
+          title: const Text(
+            'Skill Development',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           backgroundColor: const Color(0xFF3EB6FF),
           foregroundColor: Colors.white,
           elevation: 0,
@@ -299,11 +340,15 @@ class _SkillsScreenState extends State<SkillsScreen> {
                         const Text(
                           "Skill Development Modules",
                           style: TextStyle(
+                            fontFamily: 'Poppins',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Text("Adaptive learning for your chosen path"),
+                        const Text(
+                          "Adaptive learning for your chosen path",
+                          style: TextStyle(fontFamily: 'Inter'),
+                        ),
                         const SizedBox(height: 16),
 
                         // Dynamic Skill Cards
@@ -320,6 +365,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
                         const Text(
                           "Adaptive Quizzes",
                           style: TextStyle(
+                            fontFamily: 'Poppins',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),

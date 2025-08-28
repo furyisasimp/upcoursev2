@@ -85,6 +85,7 @@ class HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Welcome, $_firstName',
                           style: const TextStyle(
+                            fontFamily: 'Poppins',
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -96,6 +97,7 @@ class HomeScreenState extends State<HomeScreen> {
                               ? 'Grade $_gradeLevel – Web Developer Track'
                               : 'Student',
                           style: const TextStyle(
+                            fontFamily: 'Inter',
                             color: Colors.white70,
                             fontSize: 14,
                           ),
@@ -176,6 +178,7 @@ class HomeScreenState extends State<HomeScreen> {
                     const Text(
                       'Quick Actions',
                       style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -257,6 +260,7 @@ class HomeScreenState extends State<HomeScreen> {
                       const Text(
                         'Your Progress',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -272,7 +276,10 @@ class HomeScreenState extends State<HomeScreen> {
                             percent: 0.3243,
                             center: const Text(
                               "32.43%",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontFamily: 'RobotoMono',
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             progressColor: const Color(0xFF3EB6FF),
                             backgroundColor: Colors.grey.shade200,
@@ -283,7 +290,10 @@ class HomeScreenState extends State<HomeScreen> {
                             percent: 0.481,
                             center: const Text(
                               "48.1%",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontFamily: 'RobotoMono',
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             progressColor: const Color(0xFF3EB6FF),
                             backgroundColor: Colors.grey.shade200,
@@ -297,11 +307,17 @@ class HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             'NCAE Prep',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Text(
                             'Assessment',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -310,6 +326,7 @@ class HomeScreenState extends State<HomeScreen> {
                       const Text(
                         'Focus Areas',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -373,6 +390,7 @@ class HomeScreenState extends State<HomeScreen> {
               Text(
                 label,
                 style: TextStyle(
+                  fontFamily: 'Inter',
                   fontSize: 12,
                   color: selected ? const Color(0xFF3EB6FF) : Colors.grey[700],
                   fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
@@ -410,7 +428,10 @@ class HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(icon, size: 28, color: Theme.of(context).primaryColor),
             const SizedBox(height: 8),
-            Text(label, style: const TextStyle(fontSize: 14)),
+            Text(
+              label,
+              style: const TextStyle(fontFamily: 'Inter', fontSize: 14),
+            ),
           ],
         ),
       ),
@@ -423,7 +444,10 @@ class HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14)),
+          Text(
+            label,
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 14),
+          ),
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),

@@ -23,8 +23,9 @@ class ExplorationScreen extends StatelessWidget {
         title: const Text(
           'Exploration',
           style: TextStyle(
+            fontFamily: 'Poppins',
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: Colors.black87,
           ),
         ),
@@ -96,7 +97,7 @@ class ExplorationScreen extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(
+                  border: const Border(
                     left: BorderSide(color: Colors.green, width: 3),
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -127,7 +128,13 @@ class ExplorationScreen extends StatelessWidget {
                         side: const BorderSide(color: Colors.grey),
                       ),
                       onPressed: () {},
-                      child: const Text("View Detailed Market Report"),
+                      child: const Text(
+                        "View Detailed Market Report",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -181,12 +188,20 @@ class ExplorationScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
           ),
           if (subtitle != null)
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                color: Colors.black54,
+              ),
             ),
         ],
       ),
@@ -232,7 +247,8 @@ class ExplorationScreen extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
                     fontSize: 16,
                   ),
                 ),
@@ -248,18 +264,32 @@ class ExplorationScreen extends StatelessWidget {
                   ),
                   child: Text(
                     '$match Match',
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 6),
-            Text(description, style: const TextStyle(color: Colors.black87)),
+            Text(
+              description,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                color: Colors.black87,
+              ),
+            ),
             const SizedBox(height: 8),
             ...points.map(
               (p) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-                child: Text('• $p', style: const TextStyle(fontSize: 13)),
+                child: Text(
+                  '• $p',
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 13),
+                ),
               ),
             ),
           ],
@@ -277,8 +307,14 @@ class ExplorationScreen extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: ListTile(
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Inter')),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {},
       ),
@@ -298,20 +334,21 @@ class ExplorationScreen extends StatelessWidget {
             children: [
               const Icon(Icons.chat_bubble_outline, color: Colors.green),
               const SizedBox(width: 10),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'AI Counselor Available',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
                         color: Colors.green,
                       ),
                     ),
                     Text(
                       'Get instant answers about career paths, requirements, and opportunities.',
-                      style: TextStyle(fontSize: 13),
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 13),
                     ),
                   ],
                 ),
@@ -322,7 +359,11 @@ class ExplorationScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 child: const Text(
                   'In Development',
-                  style: TextStyle(color: Colors.white), // ← here
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -342,7 +383,10 @@ class ExplorationScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Schedule with Counselor',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               Icon(Icons.chevron_right),
@@ -380,7 +424,8 @@ class _insightBox extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
               fontSize: 18,
               color: color,
             ),
@@ -389,7 +434,7 @@ class _insightBox extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(fontFamily: 'Inter', fontSize: 12),
           ),
         ],
       ),

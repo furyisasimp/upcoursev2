@@ -111,7 +111,7 @@ class SupabaseService {
     final uid = authUserId;
     if (uid == null) throw 'Not logged in';
 
-    await supa.from('questionnaireresponses').insert({
+    await supa.from('questionnaire_responses').insert({
       'response_id': "${uid}_${DateTime.now().millisecondsSinceEpoch}",
       'user_id': uid,
       'timestamp': DateTime.now().toIso8601String(),
@@ -124,7 +124,7 @@ class SupabaseService {
     if (uid == null) return null;
 
     return await supa
-        .from('questionnaireresponses')
+        .from('questionnaire_responses')
         .select()
         .eq('user_id', uid)
         .order('created_at', ascending: false)
@@ -298,12 +298,13 @@ class SupabaseService {
 
       return [];
     } catch (e) {
+      // ignore: avoid_print
       print("Error loading module: $e");
       return [];
     }
   }
 
-  // ---------- LOAD QUIZZES ----------
+  // ---------- LOAD QUIZZES (legacy adaptive) ----------
   static Future<List<Map<String, dynamic>>> loadQuiz(String quizId) async {
     try {
       final data = await supa.storage
@@ -320,12 +321,25 @@ class SupabaseService {
 
       return [];
     } catch (e) {
+      // ignore: avoid_print
       print("Error loading quiz: $e");
       return [];
     }
   }
 
-  // ---------- STORAGE ----------
+  // ---------- STORAGE (generic) ----------
+  /// Lists file *names* at `path` ('' = root) inside a bucket.
+  /// Used by QuizCategoriesScreen to discover quizzes like ABM.json, STEM.json.
+  static Future<List<String>> listFiles({
+    required String bucket,
+    String path = '',
+  }) async {
+    final List<FileObject> entries = await supa.storage
+        .from(bucket)
+        .list(path: path); // ← named param
+    return entries.map((f) => f.name).toList();
+  }
+
   static Future<String> uploadAvatar({
     required String fileName,
     required Uint8List bytes,
@@ -348,33 +362,44 @@ class SupabaseService {
     return supa.storage.from('avatars').getPublicUrl(path);
   }
 
-  // ✅ NEW: Dynamic list of PDFs
+  // ✅ Dynamic list of PDFs
   static Future<List<FileObject>> listPdfFiles() async {
-    return await supa.storage.from('my-study-guides').list();
+    return await supa.storage.from('my-study-guides').list(path: '');
   }
 
   static Future<String?> getPdfUrl(String key) async {
     return supa.storage.from('my-study-guides').getPublicUrl(key);
   }
 
-  // ✅ NEW: Dynamic list of videos
+  // ✅ Dynamic list of videos
   static Future<List<FileObject>> listVideoFiles() async {
-    return await supa.storage.from('study-guide-videos').list();
+    return await supa.storage.from('study-guide-videos').list(path: '');
   }
 
   static Future<String?> getVideoUrl(String key) async {
     return supa.storage.from('study-guide-videos').getPublicUrl(key);
   }
 
+  /// Returns a URL you can `http.get`. Uses a **signed URL** first (works for
+  /// private and public buckets), falling back to a public URL if signing fails.
   static Future<String?> getFileUrl({
     required String bucket,
     required String path,
     int expiresIn = 86400,
   }) async {
     try {
-      return supa.storage.from(bucket).getPublicUrl(path);
+      final signed = await supa.storage
+          .from(bucket)
+          .createSignedUrl(path, expiresIn);
+      return signed;
     } catch (_) {
-      return await supa.storage.from(bucket).createSignedUrl(path, expiresIn);
+      try {
+        return supa.storage.from(bucket).getPublicUrl(path);
+      } catch (e) {
+        // ignore: avoid_print
+        print('getFileUrl failed for $bucket/$path: $e');
+        return null;
+      }
     }
   }
 

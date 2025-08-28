@@ -35,18 +35,19 @@ flutter:
     - assets/
 
   fonts:
-    - family: TT Rounds Neue Medium
+    - family: Poppins
       fonts:
-        - asset: assets/fonts/TTRoundsNeueTrialMedium.ttf
-    - family: TT Rounds Neue Bold
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+    - family: Inter
       fonts:
-        - asset: assets/fonts/TTRoundsNeueTrialBold.ttf
-    - family: TT Rounds Neue
+        - asset: assets/fonts/Inter_18pt-Medium.ttf
+          weight: 500
+    - family: RobotoMono
       fonts:
-        - asset: assets/fonts/TTRoundsNeueTrialRegular.ttf
-    - family: Basique
-      fonts:
-        - asset: assets/fonts/Basique.ttf
-    - family: Basique 1
-      fonts:
-        - asset: assets/fonts/Basique1.ttf
+        - asset: assets/fonts/RobotoMono-Regular.ttf
+          weight: 400

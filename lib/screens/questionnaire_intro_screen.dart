@@ -41,6 +41,7 @@ class QuestionnaireIntroScreen extends StatelessWidget {
                 const Text(
                   'Assessment Intro',
                   style: TextStyle(
+                    fontFamily: 'Poppins',
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -72,9 +73,9 @@ class QuestionnaireIntroScreen extends StatelessWidget {
                   const Text(
                     'Welcome to the Pre-Assessment!',
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'TT Rounds Neue Bold',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -84,10 +85,7 @@ class QuestionnaireIntroScreen extends StatelessWidget {
                   // Description
                   const Text(
                     'Before we get started, we’ll ask you a few short questions to better understand your background and readiness for the NCAE. This should only take a few minutes.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'TT Rounds Neue Regular',
-                    ),
+                    style: TextStyle(fontFamily: 'Inter', fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
 
@@ -114,7 +112,12 @@ class QuestionnaireIntroScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Start Assessment',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
